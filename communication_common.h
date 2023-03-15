@@ -6,6 +6,10 @@
 #define DATE_SIZE 20 // to determine https://stackoverflow.com/questions/1442116/how-to-get-the-date-and-time-values-in-a-c-program
 #define PAYLOAD_SIZE (sizeof(double) + DATE_SIZE)
 
+#define QUERY_BIT 0
+#define RESPONSE_BIT 3
+#define CODE_LENGTH 8
+
 enum rq_t {
     SQUARE,
     DATE
