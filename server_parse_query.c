@@ -16,6 +16,28 @@ int get_response_bit(struct message_t message)
     return GET_BIT(message.code, RESPONSE_BIT);
 }
 
+void set_response_bit(struct message_t *message)
+{
+    SET_BIT(message->code, RESPONSE_BIT);
+}
+
+void set_query_bit(struct message_t *message, enum rq_t rq)
+{
+    if (rq != SQUARE && rq != DATE)
+        return;
+
+    SET_BIT(message->code, QUERY_BIT);
+    message->code |= rq;
+}
+
+void prep_response(struct message_t *message, enum rq_t rq, void *payload, size_t payload_size)
+{
+    set_query_bit(message, rq);
+    set_response_bit(message);
+
+    memcpy(message->payload, payload, payload_size);
+}
+
 bool are_remaining_bits_valid(struct message_t message)
 {
     /* check if all unused bits are set to 0 */

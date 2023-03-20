@@ -12,11 +12,13 @@
 
 struct client_list_t *client_list;
 struct server_t server;
-
-void foo(struct sockaddr_in *temp_client_address, socklen_t temp_client_socklen, int temp_socket_fd);
+time_t timer;
 
 int initialize_server()
 {
+    /* init timer */
+    timer = time(NULL);
+
     server.socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server.socket_fd < 0)
         return printf("Error while creating socket\n"), 1;
@@ -121,11 +123,25 @@ void *handle_client(void *arg)
     memset(&reply, 0, sizeof(struct message_t));
     if (message.rq == SQUARE) {
         double num_to_square = get_number_from_message(message);
-        // TODO: send result to client
-    } else if (message.rq == DATE)
-        ;// TODO: send date to client
+        prep_response(&reply, SQUARE, (void *)&num_to_square, sizeof(double));
+    } else if (message.rq == DATE) {
+        char *date = get_server_date();
+        prep_response(&reply, DATE, (void *)date, strlen(date) + 1);
+        free(date);
+    }
+
+    write(client->socket_fd, &reply, sizeof(struct message_t));
+    remove_client(client->client_idx);
 
     return NULL;
+}
+
+char *get_server_date() {
+    char ret[DATE_SIZE];
+    struct tm *time_now = localtime(&timer);
+
+    strftime(ret, DATE_SIZE, "%c", time_now);
+    return strdup(ret);
 }
 
 int destroy_server()

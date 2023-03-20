@@ -32,4 +32,6 @@ int destroy_server();
 int remove_client(int client_idx);
 void *handle_client(void *arg);
 
+char *get_server_date();
+
 #endif //RSO_SERVER_CLIENT_SERVER_CLIENT_HANDLER_H
