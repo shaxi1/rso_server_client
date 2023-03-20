@@ -4,6 +4,8 @@
 #include "server.h"
 #include "communication_common.h"
 
+#define SET_BIT(x, pos) (x |= (1U << pos))
+
 void prep_request(struct message_t *message, enum rq_t rq, void *payload, size_t payload_size);
 
 void print_square_result(int socket_fd);

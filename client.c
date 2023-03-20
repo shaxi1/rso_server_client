@@ -66,6 +66,17 @@ void print_square_result(int socket_fd) {
     printf("Response received: %lf\n", result);
 }
 
+void prep_query_code(enum rq_t rq, struct message_t *message)
+{
+    if (rq != SQUARE && rq != DATE)
+        return;
+
+    if (rq == SQUARE)
+        SET_BIT(message->code, 1);
+    else
+        SET_BIT(message->code, 2);
+}
+
 void prep_request(struct message_t *message, enum rq_t rq, void *payload, size_t payload_size)
 {
     if (rq != SQUARE && rq != DATE)
@@ -73,7 +84,6 @@ void prep_request(struct message_t *message, enum rq_t rq, void *payload, size_t
 
     memset(message, 0, sizeof(struct message_t));
     message->rq = rq;
-
-
-
+    if (payload != NULL)
+        memcpy(message->payload, payload, payload_size);
 }
