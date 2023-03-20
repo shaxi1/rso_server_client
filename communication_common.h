@@ -10,10 +10,6 @@
 #define RESPONSE_BIT 3
 #define CODE_LENGTH 8
 
-#define SERVER_ADDRESS "127.0.0.1"
-#define SERVER_PORT 2121
-extern int socket_fd;
-
 enum rq_t {
     SQUARE,
     DATE
