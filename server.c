@@ -1,21 +1,21 @@
 #include <stdio.h>
+#include <stdatomic.h>
 #include "server_client_handler.h"
-
 
 int main()
 {
+    /* run server_listen on a thread */
+    pthread_t server_listen_thread;
+    printf("Starting server...\n");
     initialize_server();
+    pthread_create(&server_listen_thread, NULL, server_listen, NULL);
 
     while(1) {
-        /* run server_listen on a thread */
-        pthread_t server_listen_thread;
-        printf("Starting server...\n");
-        pthread_create(&server_listen_thread, NULL, server_listen, NULL);
-
         char c;
-        if (scanf("%c", &c) == 'q') {
+        scanf("%c%*c", &c);
+        if (c == 'q') {
             printf("Quitting...\n");
-            pthread_cancel(server_listen_thread);
+            atomic_store(&terminate_server, 1);
             destroy_server();
             break;
         }

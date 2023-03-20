@@ -1,3 +1,4 @@
+#include <stdatomic.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -14,6 +15,8 @@
 struct client_list_t *client_list;
 struct server_t server;
 time_t timer;
+
+atomic_int terminate_server = 0;
 
 int initialize_server()
 {
@@ -90,6 +93,10 @@ void *server_listen(void *arg)
     struct sockaddr_in temp_client_address;
     socklen_t temp_client_socklen = sizeof(temp_client_address);
     while (1) {
+        atomic_int check = atomic_load(&terminate_server);
+        if (check == 1)
+            break;
+
         printf("Waiting for clients...\n");
 
         if (client_list->clients_connected == client_list->capacity)
@@ -148,7 +155,7 @@ char *get_server_date() {
 
 int destroy_server()
 {
-    if (client_list != NULL && client_list->clients != NULL)
+    if (client_list == NULL && client_list->clients == NULL)
         return printf("Error while destroying server\n"), 1;
 
     for (int i = 0; i < client_list->capacity; i++)

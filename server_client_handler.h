@@ -8,6 +8,8 @@
 #include "communication_common.h"
 #include "server_parse_query.h"
 
+extern atomic_int terminate_server;
+
 struct client_t {
     int socket_fd;
     struct sockaddr_in client_address;
