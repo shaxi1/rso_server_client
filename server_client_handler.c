@@ -92,13 +92,11 @@ void *server_listen(void *arg)
 
     struct sockaddr_in temp_client_address;
     socklen_t temp_client_socklen = sizeof(temp_client_address);
+    printf("Waiting for clients...\n");
     while (1) {
         atomic_int check = atomic_load(&terminate_server);
         if (check == 1)
             break;
-
-        printf("Waiting for clients...\n");
-
         if (client_list->clients_connected == client_list->capacity)
             if (server_increase_client_list_capacity() != 0)
                 return NULL;
@@ -107,6 +105,7 @@ void *server_listen(void *arg)
         if (temp_socket_fd < 0)
             return NULL;
         add_client(&temp_client_address, temp_client_socklen, temp_socket_fd);
+        printf("Client connected, idx:%d\n", client_list->clients_connected - 1);
     }
 
     return NULL;
@@ -126,6 +125,7 @@ void *handle_client(void *arg)
     }
 
     determine_and_set_query_type(&message);
+    printf("Query received, client idx:%d, query type:%d\n", client->client_idx, message.rq);
 
     struct message_t reply;
     memset(&reply, 0, sizeof(struct message_t));
