@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <math.h>
 
 #include "server_client_handler.h"
 #include "server.h"
@@ -123,6 +124,7 @@ void *handle_client(void *arg)
     memset(&reply, 0, sizeof(struct message_t));
     if (message.rq == SQUARE) {
         double num_to_square = get_number_from_message(message);
+        num_to_square *= sqrt(num_to_square);
         prep_response(&reply, SQUARE, (void *)&num_to_square, sizeof(double));
     } else if (message.rq == DATE) {
         char *date = get_server_date();
