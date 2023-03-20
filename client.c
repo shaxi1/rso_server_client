@@ -44,13 +44,14 @@ int main()
             prep_request(&message, SQUARE, number);
 
         } else if (c == 'd') {
-            printf("Sending date request...\n");
             prep_request(&message, DATE, 0);
         } else {
             printf("Unknown command\n");
         }
 
+        printf("Sending request...\n");
         write(socket_fd, &message, sizeof(struct message_t));
+        printf("Request sent\n");
     }
 
     return 0;

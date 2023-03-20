@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <math.h>
 #include <stdatomic.h>
+#include <errno.h>
 
 #include "server_client_handler.h"
 #include "server.h"
@@ -30,6 +31,7 @@ int initialize_server()
     server.server_address.sin_port = htons(SERVER_PORT);
     server.server_socklen = sizeof(server.server_address);
 
+//    setsockopt(server.socket_fd, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int));
     int r = bind(server.socket_fd, (struct sockaddr *) &server.server_address, server.server_socklen);
     if (r < 0)
         return printf("Error while binding socket\n"), 2;
@@ -66,6 +68,8 @@ void *server_listen(void *arg)
         int temp_socket_fd = accept(server.socket_fd, (struct sockaddr *) &temp_client_address, &temp_client_socklen);
         if (temp_socket_fd < 0)
             return NULL;
+
+        printf("client connected\n");
         add_client(&temp_client_address, temp_client_socklen, temp_socket_fd);
         handle_client();
     }
@@ -108,7 +112,10 @@ void execute_and_pop_query()
         free(date);
     }
 
+    printf("Sending response to client\n");
     write(client.socket_fd, &reply, sizeof(struct message_t));
+
+    query_list.size--;
 }
 
 void handle_client()
