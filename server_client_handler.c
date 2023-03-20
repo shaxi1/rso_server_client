@@ -115,7 +115,7 @@ void execute_and_pop_query()
         free(date);
     }
 
-    printf("Sending response to the client\n");
+//    printf("Sending response to the client\n");
     write(client.socket_fd, &reply, sizeof(struct message_t));
 }
 
