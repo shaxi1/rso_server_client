@@ -7,7 +7,7 @@
 #include "communication_common.h"
 
 #define SERVER_ADDRESS "127.0.0.1"
-#define SERVER_PORT 2120
+#define SERVER_PORT 2119
 #define STARTING_QUERY_LIST_CAPACITY 10
 
 struct server_t {

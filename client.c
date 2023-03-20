@@ -25,9 +25,7 @@ int main()
     if (connect(socket_fd, (struct sockaddr *) &server_address, sizeof(server_address)) < 0)
         return printf("Connection failed\n"), 1;
 
-    pthread_t t;
-    pthread_create(&t, NULL, read_from_server, &socket_fd);
-
+    int flag = 0;
     printf("Connected to server\n");
     printf("s square, d date, q quit\n");
     while (1) {
@@ -52,6 +50,12 @@ int main()
         printf("Sending request...\n");
         write(socket_fd, &message, sizeof(struct message_t));
         printf("Request sent\n");
+
+        if (flag == 0) {
+            pthread_t thread;
+            pthread_create(&thread, NULL, read_from_server, &socket_fd);
+            flag = 1;
+        }
     }
 
     return 0;
@@ -73,14 +77,17 @@ void *read_from_server(void *arg)
 {
     struct message_t message;
     int socket_fd = *(int *) arg;
-    read(socket_fd, &message, sizeof(struct message_t));
+    while (1) {
+        read(socket_fd, &message, sizeof(struct message_t));
 
-    if (message.rq == SQUARE) {
-        double result;
-        memcpy(&result, message.payload, sizeof(double));
-        printf("Result: %f\n", result);
-    } else if (message.rq == DATE) {
-        printf("Date: %s\n", message.payload);
+        if (message.rq == SQUARE) {
+            double result;
+            memcpy(&result, message.payload, sizeof(double));
+            printf("Result: %lf\n", result);
+        } else if (message.rq == DATE) {
+            printf("Date: %s\n", message.payload);
+        }
+        fflush(stdout);
     }
 
     return NULL;

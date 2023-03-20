@@ -101,21 +101,22 @@ void execute_and_pop_query()
 
     struct message_t reply;
     char payload[PAYLOAD_SIZE];
+    memset(reply.payload, 0, PAYLOAD_SIZE);
     if (query.rq == SQUARE) {
         double result = sqrt(query.number);
+        reply.rq = SQUARE;
         memcpy(payload, &result, sizeof(double));
         prep_response(&reply, query.rq, payload, sizeof(double));
     } else {
         char *date = get_server_date();
-        strcpy(payload, date);
+        sprintf(payload, "%s\n", date);
+        reply.rq = DATE;
         prep_response(&reply, query.rq, payload, strlen(date));
         free(date);
     }
 
-    printf("Sending response to client\n");
+    printf("Sending response to the client\n");
     write(client.socket_fd, &reply, sizeof(struct message_t));
-
-    query_list.size--;
 }
 
 void handle_client()
