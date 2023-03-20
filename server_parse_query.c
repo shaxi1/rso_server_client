@@ -13,7 +13,7 @@ int get_query_bit(struct message_t message)
 
 int get_response_bit(struct message_t message)
 {
-    return SET_BIT(message.code, RESPONSE_BIT);
+    return GET_BIT(message.code, RESPONSE_BIT);
 }
 
 bool are_remaining_bits_valid(struct message_t message)

@@ -116,6 +116,9 @@ void *handle_client(void *arg)
     }
 
     determine_and_set_query_type(&message);
+
+    struct message_t reply;
+    memset(&reply, 0, sizeof(struct message_t));
     if (message.rq == SQUARE) {
         double num_to_square = get_number_from_message(message);
         // TODO: send result to client
