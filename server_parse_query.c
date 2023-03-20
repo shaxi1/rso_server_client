@@ -5,7 +5,6 @@
 #define GET_BIT(x, pos) (x & (1UL << pos))
 #define SET_BIT(x, pos) (x |= (1U << pos))
 
-
 int get_query_bit(struct message_t message)
 {
     return GET_BIT(message.code, QUERY_BIT);
