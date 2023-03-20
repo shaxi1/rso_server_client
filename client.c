@@ -86,4 +86,5 @@ void prep_request(struct message_t *message, enum rq_t rq, void *payload, size_t
     message->rq = rq;
     if (payload != NULL)
         memcpy(message->payload, payload, payload_size);
+    prep_query_code(rq, message);
 }
