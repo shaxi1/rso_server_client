@@ -3,36 +3,24 @@
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <pthread.h>
 
 #include "communication_common.h"
 #include "server_parse_query.h"
-
-extern atomic_int terminate_server;
 
 struct client_t {
     int socket_fd;
     struct sockaddr_in client_address;
     socklen_t client_socklen;
-    int taken;
-    int client_idx;
-    pthread_t thread;
 };
 
-struct client_list_t {
-    int capacity;
-    int clients_connected;
-    struct client_t *clients;
-};
-
-extern struct client_list_t *client_list;
+extern struct client_t client;
+extern atomic_int terminate_server;
 
 int initialize_server();
 void *server_listen(void *arg);
 int destroy_server();
 
-int remove_client(int client_idx);
-void *handle_client(void *arg);
+void handle_client();
 
 char *get_server_date();
 

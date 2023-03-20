@@ -4,12 +4,8 @@
 #include "server.h"
 #include "communication_common.h"
 
-#define SET_BIT(x, pos) (x |= (1U << pos))
-
-void prep_request(struct message_t *message, enum rq_t rq, void *payload, size_t payload_size);
-
-void print_square_result(int socket_fd);
-void print_date_response(int socket_fd);
+void prep_request(struct message_t *message, enum rq_t rq, double number);
+void *read_from_server(void *arg);
 
 
 #endif //RSO_SERVER_CLIENT_CLIENT_H

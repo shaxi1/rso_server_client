@@ -6,9 +6,9 @@
 #define DATE_SIZE 64
 #define PAYLOAD_SIZE (sizeof(double) + DATE_SIZE)
 
-#define QUERY_BIT 0
-#define RESPONSE_BIT 3
-#define CODE_LENGTH 8
+#define QUERY_BYTE 0
+#define RESPONSE_BYTE 3
+#define CODE_LENGTH 4
 
 enum rq_t {
     SQUARE = 1,
@@ -20,7 +20,7 @@ struct message_t {
      * X = 1 - response
      * Y = 1 - square rq
      * Y = 2 - date rq */
-    uint8_t code;
+    char code[CODE_LENGTH];
 
     enum rq_t rq;
     char payload[PAYLOAD_SIZE];
