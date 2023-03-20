@@ -27,7 +27,7 @@ int main()
 
     int flag = 0;
     printf("Connected to server\n");
-    printf("s square, d date, q quit\n");
+    printf("enter: s square, d date, q quit\n");
     while (1) {
         struct message_t message;
         char c;
@@ -47,7 +47,6 @@ int main()
             printf("Unknown command\n");
         }
 
-        printf("Sending request...\n");
         write(socket_fd, &message, sizeof(struct message_t));
         printf("Request sent\n");
 
@@ -83,10 +82,12 @@ void *read_from_server(void *arg)
         if (message.rq == SQUARE) {
             double result;
             memcpy(&result, message.payload, sizeof(double));
-            printf("Result: %lf\n", result);
+            printf("\nResult: %lf\n", result);
         } else if (message.rq == DATE) {
-            printf("Date: %s\n", message.payload);
+            printf("\nDate: %s\n", message.payload);
         }
+
+        printf("\nenter: s square, d date, q quit\n");
         fflush(stdout);
     }
 
