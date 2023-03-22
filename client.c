@@ -5,6 +5,7 @@
 #include <pthread.h>
 
 #include "client.h"
+#include "convert.h"
 
 
 int main()
@@ -47,6 +48,7 @@ int main()
             printf("Unknown command\n");
         }
 
+        convert_to_big_endian(&message);
         write(socket_fd, &message, sizeof(struct message_t));
         printf("Request sent\n");
 
@@ -78,6 +80,7 @@ void *read_from_server(void *arg)
     int socket_fd = *(int *) arg;
     while (1) {
         read(socket_fd, &message, sizeof(struct message_t));
+        convert_from_big_endian(&message);
 
         if (message.rq == SQUARE) {
             double result;

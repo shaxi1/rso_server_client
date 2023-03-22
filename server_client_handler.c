@@ -10,6 +10,7 @@
 #include "server_client_handler.h"
 #include "server.h"
 #include "server_parse_query.h"
+#include "convert.h"
 
 struct server_t server;
 struct client_t client;
@@ -116,6 +117,7 @@ void execute_and_pop_query()
     }
 
 //    printf("Sending response to the client\n");
+    convert_to_big_endian(&reply);
     write(client.socket_fd, &reply, sizeof(struct message_t));
 }
 
@@ -124,6 +126,7 @@ void handle_client()
     while (1) {
         struct message_t message;
         read(client.socket_fd, &message, sizeof(struct message_t));
+        convert_from_big_endian(&message);
 
         determine_and_set_query_type(&message);
 
